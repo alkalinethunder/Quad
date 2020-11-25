@@ -2,7 +2,7 @@
     "bot": {
         "name": "Quad",
         "version": "0.1",
-        "repo": "https://github.com/alkalinethunder/Quad",
+        "repo": "https://github.com/vicr123/Quad",
         "prefix": "q:",
         "ratelimit": {
             "commands": 12,
@@ -12,8 +12,7 @@
             "gitservice": "GitHub",
             "contributors": [
                 "vicr123#4567",
-                "Akribes#1056",
-                "riolu#9170"
+                "Akribes#1056"
             ]
         },
         "pins": {
@@ -21,10 +20,13 @@
         }
     },
     "database": {
-        "host": "localhost",
-        "username": "quad",
-        "database": "quad",
-		"connectionTimeoutMillis": 5000
+        "backend": "pgsql",
+        "options": {
+            "host": "localhost",
+            "username": "quad",
+            "database": "quad",
+            "connectionTimeoutMillis": 5000
+        }
     },
     "server": {
         "port": 3000,

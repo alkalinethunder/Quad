@@ -1,0 +1,14 @@
+{
+    "tasks": [
+        {
+            "detail": "Build Quad.",
+            "label": "build",
+            "windows": {
+                "command": "${workspaceFolder}/build.bat",
+            },
+            "linux": {
+                "command": "${workspaceFolder}/build",
+            }
+        }
+    ]
+}

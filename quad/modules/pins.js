@@ -10,10 +10,16 @@ const getUserById = (userId) => bot.users.find(user => user.id === userId);
 
 // Pinning and unpinning
 const pin = async (userId, message) => {
-    await db.getPool().query("INSERT INTO userPins(pinId, id, channel, message) VALUES(pinIdIncrement($1), $1, $2, $3)",
-        [userId, message.channel.id, message.id])
-        .catch(() => { return false; /* We don't care, message may have been pinned already */ });
-    return true;
+    if(await db.pushPin(userId, message.channel.id, message.id)) {
+        return true
+    } else {
+        return false
+    }
+    
+    // OLD CODE
+    // await db.getPool().query("INSERT INTO userPins(pinId, id, channel, message) VALUES(pinIdIncrement($1), $1, $2, $3)",
+    //    [userId, message.channel.id, message.id])
+    //        .catch(() => { return false; /* We don't care, message may have been pinned already */ });
 };
 
 const unpin = async (userId, message) => {
@@ -117,8 +123,11 @@ const handlePinsCommand = async (message, opts, args, flags) => {
     let parameters = [message.author.id];
     if (flags.category) parameters.push(flags.category);
 
+    // Get all user pins on the given page
+    const { pageCount, pins } = await opts.db.getPins(message.author.id, flags.category, args[0], pageSize, ascending)
+
     // Get the pins from the database
-    let query;
+    /*let query;
     if (flags.category) {
         query = "SELECT p.* FROM userPins AS p, userPinsCategories AS pc, userCategories AS c WHERE p.id=pc.id AND p.id=c.id AND p.id=$1 AND p.pinid=pc.pinid AND pc.catid=c.catid AND c.name=$2 ORDER BY p.pinid " +
         (ascending ? "ASC" : "DESC");
@@ -132,7 +141,7 @@ const handlePinsCommand = async (message, opts, args, flags) => {
     let pageCount = Math.ceil(result.rows.length / pageSize);
 
     let offset = (args[0] - 1) * pageSize;
-    let pins = result.rows.slice(offset, offset + pageSize);
+    let pins = result.rows.slice(offset, offset + pageSize);*/
 
 	// Make sure we have pins
     if (pins.length === 0) {
@@ -140,7 +149,7 @@ const handlePinsCommand = async (message, opts, args, flags) => {
         return;
     }
 
-    // Find categories for the results
+    /*
     let promises = [];  
     for (let row of pins) {
         promises.push(opts.db.query("SELECT pinid, catid FROM userPinsCategories WHERE id=$1 AND pinid=$2", [message.author.id, row.pinid]));
@@ -160,7 +169,7 @@ const handlePinsCommand = async (message, opts, args, flags) => {
     
     for (let res of await Promise.all(promises2)) {
         categoryNames[res.rows[0].catid] = res.rows[0].name;
-    }
+    }*/
     
     // Get contents
     let pinFields = [];
@@ -168,7 +177,7 @@ const handlePinsCommand = async (message, opts, args, flags) => {
     for (let row of pins) {
         let message = await handler.bot.getChannel(row.channel).getMessage(row.message);
         pinFields.push({
-            name: `#${row.pinid}` + (pinCategories[row.pinid] ? ` | ${pinCategories[row.pinid].map(value => categoryNames[value]).join(", ")}` : ""),
+            name: `#${row.pinid}` + (!!row.category ? ` | ${row.category}` : ""),
             value: `${message.content}
                     — ${message.author.mention} ([Jump](https://discordapp.com/channels/${message.channel.guild.id}/${row.channel}/${row.message}))`
         });

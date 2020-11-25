@@ -30,10 +30,13 @@ handler.register("setlocale", {
             return;
         }
         
+        await opts.db.setLocale(message.author.id, args[0])
+
+        /*
         await opts.db.query("INSERT INTO locales(id, locale) VALUES($1, $2) ON CONFLICT ON CONSTRAINT locales_pkey DO UPDATE SET locale=$2", [
             message.author.id,
             args[0]
-        ]);
+        ]);*/
         
         let t = (await i18n(message)).t;
         message.channel.createMessage(t("**Locale Updated**\nYour locale was updated."));

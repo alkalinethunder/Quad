@@ -2,7 +2,7 @@
     "bot": {
         "name": "Quad",
         "version": "0.1",
-        "repo": "https://github.com/vicr123/Quad",
+        "repo": "https://github.com/alkalinethunder/Quad",
         "prefix": "q:",
         "ratelimit": {
             "commands": 12,
@@ -12,7 +12,8 @@
             "gitservice": "GitHub",
             "contributors": [
                 "vicr123#4567",
-                "Akribes#1056"
+                "Akribes#1056",
+                "riolu#9170"
             ]
         },
         "pins": {

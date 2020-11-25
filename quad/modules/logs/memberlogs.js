@@ -6,10 +6,17 @@ const MemberUtil = require("memberutils");
 async function alertsChannel(guild, client = null) {
     if (!guild) return null;
     
-    if (!client) client = db.getPool();
+    // NEW DB ENGINE
+    const guildInfo = await db.getGuildLogs(guild.id)
+    const channelId = guildInfo.alertsChannel
+
+
+    // OLD CODE
+    /*if (!client) client = db.getPool();
     let resp = await client.query("SELECT alerts FROM guildLogs WHERE id=$1", [guild.id]);
     if (resp.rowCount == 0) return null;
-    let channelId = resp.rows[0].alerts;
+    let channelId = resp.rows[0].alerts;*/
+    
     let channelObj = guild.channels.find(c => {
         return c.id === channelId;
     });

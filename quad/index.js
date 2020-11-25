@@ -1,8 +1,14 @@
 #!/usr/bin/env node
 
 //Set up the configuration files
-process.env["NODE_CONFIG_DIR"] = "/etc/quad/:../config/";
-process.env["QUAD_TR_DIR"] = "./translations/";
+if (process.platform == 'win32') {
+    // victor doesn't like windows but I do so yeah - michael
+    process.env["NODE_CONFIG_DIR"] = "%AppData%\\Quad\\etc\\quad;..\\config/";
+    process.env["QUAD_TR_DIR"] = ".\\translations\\";
+} else {
+    process.env["NODE_CONFIG_DIR"] = "/etc/quad/:../config/";
+    process.env["QUAD_TR_DIR"] = "./translations/";
+}
 
 const Eris = require('eris');
 const config = require('config');

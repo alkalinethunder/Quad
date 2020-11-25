@@ -5,9 +5,13 @@ const moment = require("moment");
 async function chatLogsChannel(guild) {
     if (!guild) return null;
     
-    let resp = await db.getPool().query("SELECT logs FROM guildLogs WHERE id=$1", [guild.id]);
+    const guildInfo = await db.getGuildLogs(guild.id)
+    const channelId = guildInfo.chatLogsChannel
+
+    /*let resp = await db.getPool().query("SELECT logs FROM guildLogs WHERE id=$1", [guild.id]);
     if (resp.rowCount == 0) return null;
-    let channelId = resp.rows[0].logs;
+    let channelId = resp.rows[0].logs;*/
+    
     let channelObj = guild.channels.find(c => {
         return c.id === channelId;
     });
